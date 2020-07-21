@@ -1,1 +1,1 @@
-# IHa bot
+# iHA bot
