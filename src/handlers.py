@@ -1,5 +1,5 @@
 import config
-from misc import bot, dp
+from misc import bot, dp, database
 
 from vk_api.exceptions import ApiError
 
@@ -86,3 +86,39 @@ def kick_user(event):
 			bot.send_message(event.peer_id, f'Ошибка - {e}', reply_to=event.message_id)
 	else:
 		bot.send_message(event.peer_id, 'Введите продолжение команды', reply_to=event.message_id)
+
+@dp.message_handler(command='/add_main_pattern', admin=True, from_user=True)
+def add_main_pattern(event):
+	text = event.text.replace('/add_main_pattern', '')
+	pattern = text[:text.find('..+')].strip()
+	answer = text[text.find('..+') + 3:].strip()
+
+	if not text:
+		bot.send_message(event.peer_id, 'Введите продолжение команды', reply_to=event.message_id)
+	elif text.find('..+') < 0:
+		bot.send_message(event.peer_id, 'Неправильный формат', reply_to=event.message_id)
+	elif not pattern:
+		bot.send_message(event.peer_id, 'Введите шаблон', reply_to=event.message_id)
+	elif not answer:
+		bot.send_message(event.peer_id, 'Введите ответ', reply_to=event.message_id)
+	else:
+		database.add_main_pattern(pattern, answer)
+		bot.send_message(event.peer_id, 'Шаблон успешно добавлен', reply_to=event.message_id)
+
+@dp.message_handler(command='/add_extra_pattern', admin=True, from_user=True)
+def add_extra_pattern(event):
+	text = event.text.replace('/add_extra_pattern', '')
+	pattern = text[:text.find('..+')].strip()
+	answer = text[text.find('..+') + 3:].strip()
+
+	if not text:
+		bot.send_message(event.peer_id, 'Введите продолжение команды', reply_to=event.message_id)
+	elif text.find('..+') < 0:
+		bot.send_message(event.peer_id, 'Неправильный формат', reply_to=event.message_id)
+	elif not pattern:
+		bot.send_message(event.peer_id, 'Введите шаблон', reply_to=event.message_id)
+	elif not answer:
+		bot.send_message(event.peer_id, 'Введите ответ', reply_to=event.message_id)
+	else:
+		database.add_extra_pattern(pattern, answer)
+		bot.send_message(event.peer_id, 'Шаблон успешно добавлен', reply_to=event.message_id)
